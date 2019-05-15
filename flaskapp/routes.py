@@ -24,25 +24,33 @@ def getRandomForPhysics():
     return answers
 
 
-@app.route("/", methods=['GET', 'POST'])
-def home():
+def get_client():
     sess = request.cookies.get('session')
     client = None
-    form = PostForm()
     if sess in clients:
         client = clients[sess]
     else:
         clients[sess] = []
         client = clients[sess]
+    return client
 
+
+def update_physic(physic, val, right):
+    if val == right:
+        physic['history'].append([val, 'success'])
+        physic['veracity'] += 1
+    else:
+        physic['history'].append([val, 'danger'])
+        physic['veracity'] -= 1
+
+
+@app.route("/", methods=['GET', 'POST'])
+def home():
+    form = PostForm()
+    client = get_client()
     if form.validate_on_submit():
+        pass
         client.append(form.number.data)
         for ind, val in enumerate(getRandomForPhysics()):
-            if val == form.number.data:
-                physics[ind]['history'].append([val, 'success'])
-                physics[ind]['veracity'] += 1
-            else:
-                physics[ind]['history'].append([val, 'danger'])
-                physics[ind]['veracity'] -= 1
-
+            update_physic(physics[ind], val, form.number.data)
     return render_template('index.html', physics=physics, client=client, form=form)
