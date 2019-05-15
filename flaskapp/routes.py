@@ -49,7 +49,6 @@ def home():
     form = PostForm()
     client = get_client()
     if form.validate_on_submit():
-        pass
         client.append(form.number.data)
         for ind, val in enumerate(getRandomForPhysics()):
             update_physic(physics[ind], val, form.number.data)
