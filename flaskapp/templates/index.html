@@ -48,12 +48,7 @@
       <div class="col-md-5">
         {% if 'guess' not in session or session['guess'] == [] %}
           <div class="content-section">
-            <form method="POST" action="">
-              {{ readyForm.hidden_tag() }}
-              <div class="form-group">
-                {{ readyForm.submit(class="btn btn-outline-info") }}
-              </div>
-            </form>
+            <a class="btn btn-info" href="{{ url_for('get_guess') }}">Получить предположения экстрасенсов</a>
           </div>
         {% else %}
           <div class="content-section">
@@ -62,12 +57,10 @@
               <fieldset class="form-group">
                 <legend class="border-bottom mb-4">Отправить своё число</legend>
                 <div>
-                  {% if 'guess' in session and session['guess'] != [] %}
-                    Догадки экстрасенсов:
-                    {% for guess in session['guess'] %}
-                      {{ guess }}
-                    {% endfor %}
-                  {% endif %}
+                  Догадки экстрасенсов:
+                  {% for guess in session['guess'] %}
+                    {{ guess }}
+                  {% endfor %}
                 </div>
                 <div class="form-group">
                   {{ postForm.number.label(class="form-control-label") }}

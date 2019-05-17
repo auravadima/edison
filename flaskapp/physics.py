@@ -13,7 +13,7 @@ physics = [
 ]
 
 
-def clear_clear_physics():
+def get_clear_physics():
     return [
         {'name': "Первый экстрасенс",
          'history': [],
