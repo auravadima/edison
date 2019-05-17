@@ -1,9 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField
+from wtforms import SubmitField, IntegerField
 from wtforms.validators import DataRequired, NumberRange
 
 
 class PostForm(FlaskForm):
-    number = IntegerField('Число для предсказания (Предсказывают до 5)',
-                          validators=[DataRequired(), NumberRange(min=0, max=5)])
-    submit = SubmitField('Post')
+    number = IntegerField('Загаданное число',
+                          validators=[DataRequired(), NumberRange(min=0, max=99)])
+    submit = SubmitField('Отправить число')
+
+class ReadyForm(FlaskForm):
+    submit = SubmitField('Загадал, хочу получить предположения экстрасенсов')

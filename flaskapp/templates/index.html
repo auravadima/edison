@@ -8,51 +8,85 @@
   </head>
   <body>
     <main role="main" class="container">
-      <div class="row">
-        <div class="col-md-4">
-          Истории экстрасенсов
-          {% for physic in physics %}
-            <div class='border'>
-              <div>
-                Имя: {{ physic['name'] }}
-              </div>
-              <div>
-                Достоверность: {{ physic['veracity'] }}
-              </div>
-              {% for his in physic['history'] %}
-                <div class="alert alert-{{ his[1] }}" role="alert">
-                  {{ his[0] }}
-                </div>
-              {% endfor %}
+      {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div class="alert alert-{{ category }}">
+            {{ message }}
+          </div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+    <div class="row">
+      <div class="col-md-4">
+        <div><a href="{{ url_for('clear') }}">Удалить историю экстрасенсов</a></div>
+        Истории экстрасенсов
+        {% for physic in physics %}
+          <div class='border'>
+            <div>
+              Имя: {{ physic['name'] }}
             </div>
-          {% endfor %}
-        </div>
-        <div class="col-md-3">
-          История клиента
-          {% for his in client %}
-            <div class="alert alert-info" role="alert">
-              {{ his }}
+            <div>
+              Достоверность: {{ physic['veracity'] }}
             </div>
-          {% endfor %}
-        </div>
-        <div class="col-md-5">
+            {% for his in physic['history'] %}
+              <div class="alert alert-{{ his[1] }}" role="alert">
+                {{ his[0] }}
+              </div>
+            {% endfor %}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="col-md-3">
+        История клиента
+        {% for his in session['history'] %}
+          <div class="alert alert-info" role="alert">
+            {{ his }}
+          </div>
+        {% endfor %}
+      </div>
+      <div class="col-md-5">
+        {% if 'guess' not in session or session['guess'] == [] %}
           <div class="content-section">
             <form method="POST" action="">
-              {{ form.hidden_tag() }}
-              <fieldset class="form-group">
-                <legend class="border-bottom mb-4">Получить предсказание</legend>
-                <div class="form-group">
-                  {{ form.number.label(class="form-control-label") }}
-                  {{ form.number(class="form-control ") }}
-                </div>
-              </fieldset>
+              {{ readyForm.hidden_tag() }}
               <div class="form-group">
-                {{ form.submit(class="btn btn-outline-info") }}
+                {{ readyForm.submit(class="btn btn-outline-info") }}
               </div>
             </form>
           </div>
-        </div>
+        {% else %}
+          <div class="content-section">
+            <form method="POST" action="">
+              {{ postForm.hidden_tag() }}
+              <fieldset class="form-group">
+                <legend class="border-bottom mb-4">Отправить своё число</legend>
+                <div>
+                  {% if 'guess' in session and session['guess'] != [] %}
+                    Догадки экстрасенсов:
+                    {% for guess in session['guess'] %}
+                      {{ guess }}
+                    {% endfor %}
+                  {% endif %}
+                </div>
+                <div class="form-group">
+                  {{ postForm.number.label(class="form-control-label") }}
+                  {{ postForm.number(class="form-control ") }}
+                  <div>
+                    {% for error in postForm.number.errors %}
+                      <span>{{ error }}</span>
+                    {% endfor %}
+                  </div>
+                </div>
+              </fieldset>
+              <div class="form-group">
+                {{ postForm.submit(class="btn btn-outline-info") }}
+              </div>
+            </form>
+          </div>
+        {% endif %}
       </div>
-    </main>
-  </body>
+    </div>
+  </main>
+</body>
 </html>
